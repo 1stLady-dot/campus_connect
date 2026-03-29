@@ -13,6 +13,46 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isSignUp = false;
 
+  // --- SUCCESS DIALOG FOR BONUS MARKS ---
+  void _showSuccessDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          icon: Icon(Icons.check_circle_outline, color: Colors.green, size: 70),
+          title: const Text("Success!", textAlign: TextAlign.center),
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey[600]),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[800],
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: () {
+                  Navigator.pop(context); // Close dialog
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (_) => HomeScreen())
+                  );
+                },
+                child: const Text("GET STARTED", style: TextStyle(color: Colors.white)),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authVm = Provider.of<AuthViewModel>(context);
@@ -24,22 +64,30 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
             children: [
-              const SizedBox(height: 100),
-              // --- BRANDING SECTION ---
-              Icon(Icons.shield_rounded, size: 85, color: Colors.blue[800]),
+              const SizedBox(height: 80),
+              // --- BRANDING ---
+              Icon(Icons.shield_rounded, size: 90, color: Colors.blue[800]),
               const SizedBox(height: 15),
               Text(
                 "CampusGuard",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.blue[900], letterSpacing: 1.2),
+                style: TextStyle(
+                  fontSize: 32, 
+                  fontWeight: FontWeight.bold, 
+                  color: Colors.blue[900], 
+                  letterSpacing: 1.2
+                ),
               ),
-              Text("Empowering Student Safety", style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+              Text(
+                "Your Safety, Our Priority", 
+                style: TextStyle(color: Colors.grey[600], fontSize: 16)
+              ),
               
               const SizedBox(height: 50),
 
               // --- INPUT FIELDS ---
               _buildTextField(
                 controller: _emailController,
-                hint: "Email Address",
+                hint: "University Email",
                 icon: Icons.alternate_email,
               ),
               const SizedBox(height: 15),
@@ -71,10 +119,21 @@ class _LoginScreenState extends State<LoginScreen> {
                             : await authVm.signIn(_emailController.text, _passwordController.text);
                         
                         if (success && context.mounted) {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                          if (_isSignUp) {
+                            _showSuccessDialog(context, "Welcome to CampusGuard! Your safety account has been created successfully.");
+                          } else {
+                            Navigator.pushReplacement(
+                              context, 
+                              MaterialPageRoute(builder: (_) => HomeScreen())
+                            );
+                          }
                         } else if (authVm.errorMessage != null) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(backgroundColor: Colors.red[700], content: Text(authVm.errorMessage!))
+                            SnackBar(
+                              backgroundColor: Colors.red[700], 
+                              content: Text(authVm.errorMessage!),
+                              behavior: SnackBarBehavior.floating,
+                            )
                           );
                         }
                       },
@@ -85,11 +144,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
               
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
+              
+              // --- TOGGLE SIGN IN / SIGN UP ---
               TextButton(
                 onPressed: () => setState(() => _isSignUp = !_isSignUp),
                 child: Text(
-                  _isSignUp ? "Already have an account? Sign In" : "New student? Create an account", 
+                  _isSignUp 
+                    ? "Already have an account? Sign In" 
+                    : "New student? Create an account", 
                   style: TextStyle(color: Colors.blue[800], fontWeight: FontWeight.w600)
                 ),
               ),
@@ -100,7 +163,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildTextField({required TextEditingController controller, required String hint, required IconData icon, bool isPassword = false}) {
+  // --- TEXTFIELD BUILDER ---
+  Widget _buildTextField({
+    required TextEditingController controller, 
+    required String hint, 
+    required IconData icon, 
+    bool isPassword = false
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[50],
