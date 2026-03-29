@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../viewmodels/quote_viewmodel.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import 'event_list_screen.dart';
+import 'add_event_screen.dart';
 import 'profile_screen.dart';
 import 'login_screen.dart';
 
