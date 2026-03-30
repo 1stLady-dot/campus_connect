@@ -6,9 +6,26 @@ import 'event_list_screen.dart';
 import 'profile_screen.dart';
 import 'login_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+// Changed to StatefulWidget to allow for initState
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  
+  @override
+  void initState() {
+    super.initState();
+    // This triggers the API call as soon as the Home Screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<QuoteViewModel>(context, listen: false).loadRandomQuote();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // This is now "listening" for when notifyListeners() is called in the ViewModel
     final quoteVm = Provider.of<QuoteViewModel>(context);
     final authVm = Provider.of<AuthViewModel>(context, listen: false);
 
@@ -39,7 +56,6 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // --- QUOTE OF THE DAY CARD (Professional Style) ---
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -54,14 +70,19 @@ class HomeScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.blue[900], fontWeight: FontWeight.bold)
                   ),
                   const SizedBox(height: 10),
+                  
+                  // --- THE LOGIC CHECK ---
                   if (quoteVm.isLoading)
                     const CircularProgressIndicator()
-                  else
+                  else if (quoteVm.currentQuote != null)
                     Text(
-                      '"${quoteVm.currentQuote?.text ?? "Stay vigilant."}"',
+                      '"${quoteVm.currentQuote!.text}"', // Uses the dynamic text
                       textAlign: TextAlign.center,
                       style: TextStyle(fontStyle: FontStyle.italic, color: Colors.blue[800]),
-                    ),
+                    )
+                  else
+                    const Text("Stay vigilant.", style: TextStyle(color: Colors.grey)),
+                    
                   const SizedBox(height: 10),
                   TextButton(
                     onPressed: () => quoteVm.loadRandomQuote(),
@@ -73,9 +94,6 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 40),
 
-            // --- THE CORE BUTTONS (The "Main Idea") ---
-            
-            // 1. VIEW EVENTS BUTTON
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue[900],
@@ -97,7 +115,6 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // 2. MY PROFILE BUTTON
             OutlinedButton.icon(
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 20),
@@ -118,7 +135,6 @@ class HomeScreen extends StatelessWidget {
             
             const SizedBox(height: 40),
             
-            // --- SAFETY TIP ---
             Center(
               child: Text(
                 "Always report suspicious activity immediately.",
