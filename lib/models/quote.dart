@@ -2,14 +2,14 @@ class Quote {
   final String text;
   final String author;
 
-
   Quote({required this.text, required this.author});
 
-
+  // This "factory" is the bridge between the API and your App
   factory Quote.fromJson(Map<String, dynamic> json) {
     return Quote(
-      text: json['content'] ?? 'No quote',
-      author: json['author'] ?? 'Unknown',
+      // API Ninjas uses the key 'quote', but we want to use 'text' in our app
+      text: json['quote'] ?? 'Stay vigilant and safe.', 
+      author: json['author'] ?? 'CampusGuard',
     );
   }
 }
