@@ -5,7 +5,7 @@ import '../models/quote.dart';
 
 class QuoteService {
   final String _apiUrl = 'https://api.api-ninjas.com/v1/quotes';
-  final String _apiKey = 'MWvtxjiX4pmN1sptOwlJX7TOYLS7lCLGu3o71C86';
+  final String _apiKey = '6DJxucmByY6bsOfFwN6gXSbePMWvoVnugu9Xn3MV';
 
 
   Future<Quote> fetchRandomQuote() async {
