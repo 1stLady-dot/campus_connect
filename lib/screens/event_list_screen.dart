@@ -7,6 +7,8 @@ import 'add_event_screen.dart';
 import 'comment_screen.dart';
 
 class EventListScreen extends StatefulWidget {
+  const EventListScreen({super.key});
+
   @override
   _EventListScreenState createState() => _EventListScreenState();
 }

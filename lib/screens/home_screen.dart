@@ -8,6 +8,8 @@ import 'login_screen.dart';
 
 // Changed to StatefulWidget to allow for initState
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

@@ -4,6 +4,8 @@ import '../viewmodels/auth_viewmodel.dart';
 
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final authVm = Provider.of<AuthViewModel>(context);

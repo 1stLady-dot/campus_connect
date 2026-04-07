@@ -8,6 +8,8 @@ import '../viewmodels/event_viewmodel.dart';
 import '../viewmodels/auth_viewmodel.dart';
 
 class AddEventScreen extends StatefulWidget {
+  const AddEventScreen({super.key});
+
   @override
   _AddEventScreenState createState() => _AddEventScreenState();
 }

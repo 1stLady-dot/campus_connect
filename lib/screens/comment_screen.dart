@@ -7,7 +7,7 @@ import '../viewmodels/auth_viewmodel.dart';
 
 class CommentScreen extends StatefulWidget {
   final Event event;
-  CommentScreen({required this.event});
+  const CommentScreen({super.key, required this.event});
 
 
   @override
